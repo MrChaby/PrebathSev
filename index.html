@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>Prebath Senevirathne | Freelance Graphic & 3D Web Designer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-main: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #475569;
+            --card-bg: rgba(255, 255, 255, 0.90);
+            --card-border: rgba(15, 23, 42, 0.14);
+            --card-shadow: 0 18px 40px -10px rgba(15, 23, 42, 0.10);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --nav-border: rgba(2, 132, 199, 0.30);
+            --row-bg: rgba(226, 232, 240, 0.75);
+            --row-border: rgba(148, 163, 184, 0.45);
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --accent-cyan: #0284c7;
+            --accent-purple: #7c3aed;
+            --accent-pink: #db2777;
+            --accent-emerald: #059669;
+        }
+
+        html.dark {
+            --bg-main: #030712;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(15, 23, 42, 0.76);
+            --card-border: rgba(255, 255, 255, 0.14);
+            --card-shadow: 0 22px 50px -12px rgba(0, 0, 0, 0.75);
+            --nav-bg: rgba(9, 13, 28, 0.88);
+            --nav-border: rgba(0, 242, 254, 0.30);
+            --row-bg: rgba(30, 41, 59, 0.65);
+            --row-border: rgba(255, 255, 255, 0.10);
+            --input-bg: rgba(15, 23, 42, 0.90);
+            --input-border: rgba(255, 255, 255, 0.18);
+            --accent-cyan: #22d3ee;
+            --accent-purple: #a78bfa;
+            --accent-pink: #f472b6;
+            --accent-emerald: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.35s ease, color 0.25s ease;
+        }
+
+        /* Architectural Grid + Ambient Aurora Background */
+        html.dark body {
+            background-image: 
+                radial-gradient(at 10% 15%, rgba(0, 242, 254, 0.14) 0px, transparent 48%),
+                radial-gradient(at 90% 85%, rgba(139, 92, 246, 0.16) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.06) 0px, transparent 60%),
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 42px 42px, 42px 42px;
+        }
+
+        html:not(.dark) body {
+            background-image: 
+                radial-gradient(at 10% 15%, rgba(6, 182, 212, 0.18) 0px, transparent 48%),
+                radial-gradient(at 90% 85%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.08) 0px, transparent 60%),
+                linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 42px 42px, 42px 42px;
+        }
+
+        /* Semantic Theme Utility Classes (Guaranteed Readability in Light & Dark Mode) */
+        .theme-text-primary { color: var(--text-primary) !important; }
+        .theme-text-secondary { color: var(--text-secondary) !important; }
+        .theme-text-muted { color: var(--text-muted) !important; }
+        .theme-cyan { color: var(--accent-cyan) !important; }
+        .theme-purple { color: var(--accent-purple) !important; }
+        .theme-pink { color: var(--accent-pink) !important; }
+        .theme-emerald { color: var(--accent-emerald) !important; }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--card-shadow);
+            color: var(--text-primary);
+            transition: transform 0.2s ease, border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .glass-nav {
+            background: var(--nav-bg);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid var(--nav-border);
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.18);
+            color: var(--text-primary);
+        }
+
+        .info-row {
+            background: var(--row-bg);
+            border: 1px solid var(--row-border);
+        }
+
+        .theme-input {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-primary);
+        }
+        .theme-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.75;
+        }
+
+        /* 3D Canvas Layer */
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 3D Viewport & Smooth Page Transitions */
+        #pages-viewport {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            z-index: 10;
+            perspective: 1400px;
+            overflow: hidden;
+        }
+
+        .page-section {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 5.25rem 1rem 2.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translate3d(0, 28px, -160px) scale(0.95);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                        visibility 0.65s;
+        }
+
+        @media (min-width: 640px) {
+            .page-section {
+                padding: 5.75rem 1.75rem 2.5rem 1.75rem;
+            }
+        }
+
+        .page-section.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translate3d(0, 0, 0) scale(1);
+        }
+
+        .page-section.prev {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translate3d(0, -28px, 120px) scale(1.03);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .neon-btn {
+            background: linear-gradient(135deg, #00f2fe 0%, #8b5cf6 100%);
+            color: #030712 !important;
+            font-weight: 700;
+            box-shadow: 0 8px 24px rgba(6, 182, 212, 0.35);
+            transition: all 0.25s ease;
+        }
+        .neon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(6, 182, 212, 0.55);
+        }
+        .neon-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Skill Bar Fill Animation */
+        .skill-bar-fill {
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Typing Cursor */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.1em;
+            background-color: var(--accent-cyan);
+            margin-left: 5px;
+            vertical-align: middle;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Custom Scrollbars */
+        .page-section::-webkit-scrollbar { width: 5px; }
+        .page-section::-webkit-scrollbar-track { background: transparent; }
+        .page-section::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.4);
+            border-radius: 9999px;
+        }
+
+        /* Loader Screen */
+        #loader-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #030712;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.55s ease, visibility 0.55s ease;
+        }
+        #loader-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader-screen">
+        <div class="flex flex-col items-center space-y-5 px-6 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-400 via-purple-500 to-pink-500 p-0.5 animate-pulse shadow-2xl shadow-cyan-500/40 flex items-center justify-center">
+                <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-cyan-400 font-display font-bold text-xl">
+                    PS
+                </div>
+            </div>
+            <div class="space-y-1">
+                <h2 class="font-display text-lg font-bold text-white tracking-widest uppercase">Prebath Senevirathne</h2>
+                <p id="loader-status" class="text-xs text-cyan-400 font-mono">Initializing 3D Universe & Adaptive Theme...</p>
+            </div>
+            <div class="w-52 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div id="loader-bar" class="h-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 w-0 transition-all duration-200"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <header class="fixed top-2.5 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-4xl">
+        <nav class="glass-nav rounded-2xl px-2 sm:px-4 py-2 flex items-center justify-between gap-1 sm:gap-2.5 w-full">
+            
+            <!-- Navigation Buttons Stretched From Start to End -->
+            <button onclick="navigateTo(0)" id="nav-btn-0" class="nav-btn flex-1 justify-center px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 bg-cyan-500/20 theme-cyan border border-cyan-500/40">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="3.27 6.96 12 12.01 20.73 6.96"/><line stroke-linecap="round" stroke-linejoin="round" x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                <span class="hidden sm:inline">Home</span>
+            </button>
+
+            <button onclick="navigateTo(1)" id="nav-btn-1" class="nav-btn flex-1 justify-center px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 theme-text-secondary hover:bg-cyan-500/10 border border-transparent">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span class="hidden sm:inline">About</span>
+            </button>
+
+            <button onclick="navigateTo(2)" id="nav-btn-2" class="nav-btn flex-1 justify-center px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 theme-text-secondary hover:bg-cyan-500/10 border border-transparent">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon stroke-linecap="round" stroke-linejoin="round" points="12 2 2 7 12 12 22 7 12 2"/><polyline stroke-linecap="round" stroke-linejoin="round" points="2 17 12 22 22 17"/><polyline stroke-linecap="round" stroke-linejoin="round" points="2 12 12 17 22 12"/></svg>
+                <span class="hidden sm:inline">Skills</span>
+            </button>
+
+            <button onclick="navigateTo(3)" id="nav-btn-3" class="nav-btn flex-1 justify-center px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 theme-text-secondary hover:bg-cyan-500/10 border border-transparent">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line stroke-linecap="round" stroke-linejoin="round" x1="22" y1="2" x2="11" y2="13"/><polygon stroke-linecap="round" stroke-linejoin="round" points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span class="hidden sm:inline">Contact</span>
+            </button>
+
+            <!-- AI Studio Trigger -->
+            <button onclick="openAIModal('architect')" class="flex-1 justify-center px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 theme-text-primary border border-cyan-500/40 hover:scale-[1.02]">
+                <span>✨</span>
+                <span class="hidden md:inline">AI Studio</span>
+                <span class="md:hidden">AI</span>
+            </button>
+
+            <!-- Theme Toggle Switch -->
+            <button onclick="toggleTheme()" id="theme-switch-btn" aria-label="Toggle Dark or Light Mode" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl glass-card flex items-center justify-center hover:scale-105 transition-transform border border-cyan-500/40 shrink-0">
+                <!-- Sun Icon (shown in dark mode) -->
+                <svg id="icon-sun" class="w-4 h-4 text-amber-400 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <!-- Moon Icon (shown in light mode) -->
+                <svg id="icon-moon" class="w-4 h-4 text-slate-800 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Right-side Page Dots (Desktop) -->
+    <div class="fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-center gap-3">
+        <button onclick="navigateTo(0)" class="side-dot w-3 h-3 rounded-full bg-cyan-500 ring-4 ring-cyan-500/30 transition-all" title="Home"></button>
+        <div class="w-0.5 h-5 bg-slate-400/30 rounded-full"></div>
+        <button onclick="navigateTo(1)" class="side-dot w-3 h-3 rounded-full bg-slate-400/50 hover:bg-cyan-400 transition-all" title="About"></button>
+        <div class="w-0.5 h-5 bg-slate-400/30 rounded-full"></div>
+        <button onclick="navigateTo(2)" class="side-dot w-3 h-3 rounded-full bg-slate-400/50 hover:bg-cyan-400 transition-all" title="Skills"></button>
+        <div class="w-0.5 h-5 bg-slate-400/30 rounded-full"></div>
+        <button onclick="navigateTo(3)" class="side-dot w-3 h-3 rounded-full bg-slate-400/50 hover:bg-cyan-400 transition-all" title="Contact"></button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-box" class="fixed top-20 right-4 sm:right-6 z-50 transform translate-x-96 opacity-0 transition-all duration-500 glass-nav px-4 py-3 rounded-2xl flex items-center gap-2.5 border border-cyan-500/50 shadow-xl pointer-events-none">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+        <span id="toast-text" class="text-xs sm:text-sm font-bold theme-text-primary">Action completed!</span>
+    </div>
+
+    <!-- ==========================================
+         MAIN 4-PAGE 3D VIEWPORT
+         ========================================== -->
+    <main id="pages-viewport">
+
+        <section id="page-0" class="page-section active">
+            <div class="max-w-6xl w-full mx-auto my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center py-2">
+                
+                <!-- Hero Left Intro -->
+                <div class="lg:col-span-7 space-y-4 sm:space-y-5 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 theme-cyan text-xs font-bold">
+                        <span class="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
+                        <span>Available now. Get 30% off for all new works  </span>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <p class="theme-text-muted uppercase tracking-[0.25em] text-xs font-bold">Hello Universe, I Am</p>
+                        <h1 class="font-display text-4xl sm:text-6xl xl:text-7xl font-bold tracking-tight leading-none theme-text-primary">
+                            Prebath <br class="hidden sm:inline" />
+                            <span class="text-gradient">Senevirathne</span>
+                        </h1>
+                    </div>
+
+                    <!-- Dynamic Typing Box -->
+                    <div class="glass-card rounded-2xl p-4 sm:p-5 inline-block w-full sm:w-auto border-l-4 border-l-cyan-500">
+                        <div class="text-[11px] theme-text-muted uppercase tracking-wider font-bold mb-1">Specialized In</div>
+                        <div class="text-xl sm:text-2xl md:text-3xl font-display font-bold flex items-center justify-center lg:justify-start">
+                            <span id="typed-role" class="theme-cyan">Freelancer</span>
+                            <span class="typing-cursor"></span>
+                        </div>
+                    </div>
+
+                    <p class="theme-text-secondary text-sm sm:text-base md:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                        Transforming creative visions into high-impact visual identities and immersive 3D digital web experiences. I bridge artistic <strong class="theme-cyan font-bold">Graphic Design</strong> with modern <strong class="theme-purple font-bold">Web Engineering</strong>.
+                    </p>
+
+                    <!-- Hero CTA Buttons -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-1">
+                        <button onclick="navigateTo(1)" class="neon-btn px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl flex items-center gap-2 text-xs sm:text-sm">
+                            <span>Explore My Bio</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
+                        <button onclick="openAIModal('architect')" class="glass-card hover:border-purple-500/60 font-bold px-4 sm:px-5 py-3 sm:py-3.5 rounded-xl flex items-center gap-2 text-xs sm:text-sm border border-purple-500/40">
+                            <span>✨ AI Project Planner</span>
+                        </button>
+                        <button onclick="navigateTo(3)" class="glass-card hover:border-cyan-500/60 theme-cyan font-bold px-4 sm:px-5 py-3 sm:py-3.5 rounded-xl flex items-center gap-2 text-xs sm:text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            <span>Hire Me</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hero Right 3 Role Cards -->
+                <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3.5 sm:gap-4">
+                    <!-- Role 1 -->
+                    <div class="tilt-card glass-card rounded-2xl p-4 sm:p-5 border border-cyan-500/30">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center theme-cyan shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-display font-bold text-base sm:text-lg theme-text-primary">Freelancer</h3>
+                                    <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 theme-cyan border border-cyan-500/30">PRO</span>
+                                </div>
+                                <p class="text-xs sm:text-sm theme-text-secondary mt-1 leading-relaxed">
+                                    Delivering bespoke digital solutions for global & local clients with on-time precision and creative excellence.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role 2 -->
+                    <div class="tilt-card glass-card rounded-2xl p-4 sm:p-5 border border-purple-500/30">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-purple-500/15 border border-purple-500/40 flex items-center justify-center theme-purple shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-display font-bold text-base sm:text-lg theme-text-primary">Graphic Designer</h3>
+                                    <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 theme-purple border border-purple-500/30">ART</span>
+                                </div>
+                                <p class="text-xs sm:text-sm theme-text-secondary mt-1 leading-relaxed">
+                                    Crafting memorable brand identities, logos, social media visuals, and high-end photo manipulations.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role 3 -->
+                    <div class="tilt-card glass-card rounded-2xl p-4 sm:p-5 border border-pink-500/30 sm:col-span-2 lg:col-span-1">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-pink-500/15 border border-pink-500/40 flex items-center justify-center theme-pink shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-display font-bold text-base sm:text-lg theme-text-primary">Web Designer & Dev</h3>
+                                    <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-pink-500/20 theme-pink border border-pink-500/30">3D WEB</span>
+                                </div>
+                                <p class="text-xs sm:text-sm theme-text-secondary mt-1 leading-relaxed">
+                                    Building responsive, interactive, and modern 3D websites with clean HTML, CSS, JavaScript, and UI/UX polish.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="page-1" class="page-section">
+            <div class="max-w-6xl w-full mx-auto my-auto space-y-5 py-2">
+                
+                <div class="text-center space-y-1">
+                    <span class="text-xs uppercase tracking-[0.28em] theme-cyan font-bold">Page 02 • Personal Dossier</span>
+                    <h2 class="font-display text-3xl sm:text-5xl font-bold theme-text-primary">
+                        About <span class="text-gradient">Prebath Senevirathne</span>
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    
+                    <!-- Left Column: Profile Portrait & High-Contrast Bio Table -->
+                    <div class="lg:col-span-5 tilt-card glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between border border-cyan-500/35">
+
+                        <div class="flex flex-col items-center w-full space-y-4">
+                            <!-- Portrait Showcase Frame (Uses Local Image File: profile.jpg) -->
+                            <div class="relative w-full max-w-[270px] h-60 sm:h-64 rounded-3xl p-1 bg-gradient-to-tr from-cyan-400 via-purple-500 to-pink-500 shadow-xl overflow-hidden shrink-0">
+                                <!-- Place your photo as "profile.jpg" in the same folder as index.html -->
+                                <img id="about-profile-img" 
+                                     src="profile.jpg" 
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80';"
+                                     alt="Prebath Senevirathne" 
+                                     class="w-full h-full object-cover object-center rounded-[20px] bg-slate-900">
+
+                                <!-- Dark Scrim at Bottom of Photo for Crisp White Text -->
+                                <div class="absolute inset-x-1 bottom-1 h-24 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent rounded-b-[20px] pointer-events-none"></div>
+
+                                <!-- Available Pill -->
+                                <div class="absolute bottom-3 right-3 bg-emerald-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-slate-950 flex items-center gap-1 shadow-md">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span>
+                                    <span>AVAILABLE</span>
+                                </div>
+
+                                <!-- Overlay Name Inside Photo -->
+                                <div class="absolute bottom-3 left-4 text-left pointer-events-none">
+                                    <span style="color: #67e8f9;" class="text-[10px] uppercase tracking-widest font-mono font-bold block">KANDY, LK</span>
+                                    <span style="color: #ffffff;" class="font-display font-bold text-base leading-tight block">Prebath S.</span>
+                                </div>
+                            </div>
+
+                            <!-- Name & Subtitle -->
+                            <div class="text-center w-full">
+                                <h3 class="font-display text-xl sm:text-2xl font-bold theme-text-primary">Prebath Senevirathne</h3>
+                                <p class="theme-cyan text-xs sm:text-sm font-bold mt-0.5">Freelance Graphic & 3D Web Designer</p>
+                            </div>
+
+                            <!-- Bio Details Rows (High Contrast in Both Light & Dark Modes) -->
+                            <div class="space-y-2 w-full pt-2 border-t border-slate-400/25 text-xs sm:text-sm">
+                                <div class="info-row flex items-center justify-between py-2.5 px-3.5 rounded-xl">
+                                    <span class="theme-text-secondary flex items-center gap-2 font-semibold">
+                                        <svg class="w-4 h-4 theme-cyan shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><line x1="15" y1="8" x2="17" y2="8"/><line x1="15" y1="12" x2="17" y2="12"/><path d="M7 16h10"/></svg>
+                                        <span>Full Name</span>
+                                    </span>
+                                    <span class="font-bold theme-text-primary">Prebath Senevirathne</span>
+                                </div>
+
+                                <div class="info-row flex items-center justify-between py-2.5 px-3.5 rounded-xl">
+                                    <span class="theme-text-secondary flex items-center gap-2 font-semibold">
+                                        <svg class="w-4 h-4 theme-purple shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        <span>Age</span>
+                                    </span>
+                                    <span class="font-bold theme-text-primary">23 Years Old</span>
+                                </div>
+
+                                <div class="info-row flex items-center justify-between py-2.5 px-3.5 rounded-xl">
+                                    <span class="theme-text-secondary flex items-center gap-2 font-semibold">
+                                        <svg class="w-4 h-4 theme-pink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                        <span>Location</span>
+                                    </span>
+                                    <span class="font-bold theme-text-primary">Kandy, Sri Lanka 🇱🇰</span>
+                                </div>
+
+                                <div class="info-row flex items-center justify-between py-2.5 px-3.5 rounded-xl gap-2">
+                                    <span class="theme-text-secondary flex items-center gap-2 font-semibold shrink-0">
+                                        <svg class="w-4 h-4 theme-cyan shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                        <span>Email</span>
+                                    </span>
+                                    <button onclick="copyEmail()" class="font-mono text-xs theme-cyan hover:underline flex items-center gap-1 font-bold truncate" title="Click to copy email">
+                                        <span class="truncate">prebathsofficial@gmail.com</span>
+                                        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Creative Story & Stats -->
+                    <div class="lg:col-span-7 flex flex-col justify-between gap-5">
+                        <div class="tilt-card glass-card rounded-3xl p-6 sm:p-8 space-y-4 flex-1 border border-purple-500/35 flex flex-col justify-center">
+                            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-purple-500/15 theme-purple text-xs font-bold border border-purple-500/30 w-fit">
+                                <span>✨ Creative Story & Vision</span>
+                            </div>
+
+                            <h3 class="font-display text-xl sm:text-2xl md:text-3xl font-bold theme-text-primary leading-snug">
+                                Blending Artistic Graphic Design with Interactive Web Architecture from Kandy, Sri Lanka.
+                            </h3>
+
+                            <p class="theme-text-secondary text-sm sm:text-base leading-relaxed font-medium">
+                                Hello! I'm <strong class="theme-text-primary font-bold">Prebath Senevirathne</strong>, a passionate 23-year-old independent <span class="theme-cyan font-bold">Freelancer, Graphic Designer, and Web Designer</span> based in the cultural capital of <strong class="theme-text-primary font-bold">Kandy, Sri Lanka</strong>.
+                            </p>
+
+                            <p class="theme-text-secondary text-sm sm:text-base leading-relaxed font-medium">
+                                Whether it's designing eye-catching brand aesthetics, digital artwork, or coding responsive, futuristic 3D websites from scratch, my goal is to make every brand stand out with a modern, unforgettable digital presence.
+                            </p>
+
+                            <div class="pt-2 flex flex-wrap gap-2">
+                                <span class="px-3.5 py-1.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 theme-cyan text-xs font-bold">✨ Brand Identity</span>
+                                <span class="px-3.5 py-1.5 rounded-xl bg-purple-500/15 border border-purple-500/30 theme-purple text-xs font-bold">🎨 Visual Graphics</span>
+                                <span class="px-3.5 py-1.5 rounded-xl bg-pink-500/15 border border-pink-500/30 theme-pink text-xs font-bold">💻 Modern Web UI/UX</span>
+                                <span class="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 theme-emerald text-xs font-bold">🚀 Fast Turnaround</span>
+                            </div>
+                        </div>
+
+                        <!-- Bottom 3 Metric Cards -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div class="glass-card rounded-2xl p-4 text-center border border-cyan-500/30 flex flex-col justify-center">
+                                <div class="text-2xl sm:text-3xl font-display font-bold theme-cyan">23</div>
+                                <div class="text-xs font-bold theme-text-secondary mt-0.5">Years Young</div>
+                            </div>
+                            <div class="glass-card rounded-2xl p-4 text-center border border-purple-500/30 flex flex-col justify-center">
+                                <div class="text-2xl sm:text-3xl font-display font-bold theme-purple">100%</div>
+                                <div class="text-xs font-bold theme-text-secondary mt-0.5">Client Dedication</div>
+                            </div>
+                            <button onclick="navigateTo(2)" class="col-span-2 sm:col-span-1 neon-btn rounded-2xl p-4 flex items-center justify-center gap-2 font-bold text-sm">
+                                <span>Explore My Skills</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="page-2" class="page-section">
+            <div class="max-w-6xl w-full mx-auto my-auto space-y-5 py-2">
+                
+                <div class="text-center space-y-1">
+                    <span class="text-xs uppercase tracking-[0.28em] theme-purple font-bold">Page 03 • Technical & Creative Arsenal</span>
+                    <h2 class="font-display text-3xl sm:text-5xl font-bold theme-text-primary">
+                        My <span class="text-gradient">Skills & Stack</span>
+                    </h2>
+                    <p class="theme-text-secondary text-xs sm:text-sm max-w-xl mx-auto font-medium">
+                        A complete fusion of visual graphic artistry, modern web coding, and industry-standard creative software.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+                    
+                    <!-- Skill Pillar 1: Graphic Design -->
+                    <div class="tilt-card glass-card rounded-3xl p-5 sm:p-6 border border-cyan-500/30 flex flex-col justify-between space-y-5">
+                        <div class="flex items-center justify-between">
+                            <div class="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center theme-cyan">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                            </div>
+                            <span class="text-xs font-mono font-bold uppercase px-3 py-1 rounded-full bg-cyan-500/15 theme-cyan border border-cyan-500/30">Visual Arts</span>
+                        </div>
+
+                        <div>
+                            <h3 class="font-display text-xl font-bold theme-text-primary">Graphic Design</h3>
+                            <p class="text-xs theme-text-muted font-medium mt-0.5">Branding, digital art, print & social media design</p>
+                        </div>
+
+                        <div class="space-y-3.5 text-xs sm:text-sm">
+                            <div>
+                                <div class="flex justify-between mb-1 font-semibold">
+                                    <span class="theme-text-primary">Adobe Photoshop & Manipulation</span>
+                                    <span class="theme-cyan font-mono">95%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-400/25 rounded-full overflow-hidden">
+                                    <div class="skill-bar-fill h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" data-width="95%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1 font-semibold">
+                                    <span class="theme-text-primary">Adobe Illustrator & Logo Design</span>
+                                    <span class="theme-cyan font-mono">92%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-400/25 rounded-full overflow-hidden">
+                                    <div class="skill-bar-fill h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" data-width="92%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1 font-semibold">
+                                    <span class="theme-text-primary">Brand Identity & Social Media</span>
+                                    <span class="theme-cyan font-mono">96%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-400/25 rounded-full overflow-hidden">
+                                    <div class="skill-bar-fill h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" data-width="96%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1 font-semibold">
+                                    <span class="theme-text-primary">UI / UX Visual Prototyping</span>
+                                    <span class="theme-cyan font-mono">88%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-400/25 rounded-full overflow-hidden">
+                                    <div class="skill-bar-fill h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" data-width="88%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Pillar 2: Web Design & Coding -->
+                    <div class="tilt-card glass-card rounded-3xl p-5 sm:p-6 border border-purple-500/30 flex flex-col justify-between space-y-5">
+                        <div class="flex items-center justify-between">
+                            <div class="w-12 h-12 rounded-2xl bg-purple-500/15 border border-purple-500/40 flex items-center justify-center theme-purple">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            </div>
+                            <span class="text-xs font-mono font-bold uppercase px-3 py-1 rounded-full bg-purple-500/15 theme-purple border border-purple-500/30">Development</span>
+                        </div>
+
+                        <div>
+                            <h3 class="font-display text-xl font-bold theme-text-primary">Web Design & Coding</h3>
+                            <p class="text-xs theme-text-muted font-medium mt-0.5">Interactive, responsive & modern front-end code</p>
+                        </div>
+
+                        <div class="space-y-3.5 text-xs sm:text-sm">
+                            <div>
+                                <div class="flex justify-between mb-1 font-semibold">
+                                    <span class="theme-text-primary">HTML5 & Semantic Structure</span>
+                                    <span class="theme-purple font-mono">96%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-400/25 rounded-full overflow-hidden">
+                                    <div class="skill-bar-fill h-full bg-gradient-to-r from-purple-400 to-pink-500 rounded-full" data-width="96%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1 font-semibold">
+                                    <span class="theme-text-primary">CSS3, Tailwind & Animations</span>
+                                    <span class="theme-purple font-mono">94%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-400/25 rounded-full overflow-hidden">
+                                    <div class="skill-bar-fill h-full bg-gradient-to-r from-purple-400 to-pink-500 rounded-full" data-width="94%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1 font-semibold">
+                                    <span class="theme-text-primary">JavaScript (ES6+) & Interactivity</span>
+                                    <span class="theme-purple font-mono">88%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-400/25 rounded-full overflow-hidden">
+                                    <div class="skill-bar-fill h-full bg-gradient-to-r from-purple-400 to-pink-500 rounded-full" data-width="88%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1 font-semibold">
+                                    <span class="theme-text-primary">3D Web (Three.js) & Responsive UI</span>
+                                    <span class="theme-purple font-mono">85%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-400/25 rounded-full overflow-hidden">
+                                    <div class="skill-bar-fill h-full bg-gradient-to-r from-purple-400 to-pink-500 rounded-full" data-width="85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Pillar 3: Software & Tools -->
+                    <div class="tilt-card glass-card rounded-3xl p-5 sm:p-6 border border-pink-500/30 flex flex-col justify-between space-y-5">
+                        <div class="flex items-center justify-between">
+                            <div class="w-12 h-12 rounded-2xl bg-pink-500/15 border border-pink-500/40 flex items-center justify-center theme-pink">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                            </div>
+                            <span class="text-xs font-mono font-bold uppercase px-3 py-1 rounded-full bg-pink-500/15 theme-pink border border-pink-500/30">Workflow</span>
+                        </div>
+
+                        <div>
+                            <h3 class="font-display text-xl font-bold theme-text-primary">Software & Tools</h3>
+                            <p class="text-xs theme-text-muted font-medium mt-0.5">Daily production suite for design & deployment</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div class="info-row p-3 rounded-2xl flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-pink-500/20 theme-pink flex items-center justify-center font-bold text-xs shrink-0">Fg</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-bold theme-text-primary truncate">Figma</div>
+                                    <div class="text-[10px] theme-text-muted">UI/UX Design</div>
+                                </div>
+                            </div>
+                            <div class="info-row p-3 rounded-2xl flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-cyan-500/20 theme-cyan flex items-center justify-center font-bold text-xs shrink-0">Cc</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-bold theme-text-primary truncate">Adobe CC</div>
+                                    <div class="text-[10px] theme-text-muted">Ps / Ai / Pr</div>
+                                </div>
+                            </div>
+                            <div class="info-row p-3 rounded-2xl flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-purple-500/20 theme-purple flex items-center justify-center font-bold text-xs shrink-0">VS</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-bold theme-text-primary truncate">VS Code</div>
+                                    <div class="text-[10px] theme-text-muted">Web IDE</div>
+                                </div>
+                            </div>
+                            <div class="info-row p-3 rounded-2xl flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center font-bold text-xs shrink-0">Git</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-bold theme-text-primary truncate">Git & GitHub</div>
+                                    <div class="text-[10px] theme-text-muted">Version Ctrl</div>
+                                </div>
+                            </div>
+                            <div class="info-row p-3 rounded-2xl flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-emerald-500/20 theme-emerald flex items-center justify-center font-bold text-xs shrink-0">Js</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-bold theme-text-primary truncate">Javascript</div>
+                                    <div class="text-[10px] theme-text-muted">Quick Visuals</div>
+                                </div>
+                            </div>
+                            <div class="info-row p-3 rounded-2xl flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-cyan-500/20 theme-cyan flex items-center justify-center font-bold text-xs shrink-0">3D</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-bold theme-text-primary truncate">3D WebGL</div>
+                                    <div class="text-[10px] theme-text-muted">Three.js UI</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="page-3" class="page-section">
+            <div class="max-w-5xl w-full mx-auto my-auto space-y-5 py-2">
+                
+                <div class="text-center space-y-1">
+                    <span class="text-xs uppercase tracking-[0.28em] theme-pink font-bold">Page 04 • Let's Connect</span>
+                    <h2 class="font-display text-3xl sm:text-5xl font-bold theme-text-primary">
+                        Contact <span class="text-gradient">Prebath</span>
+                    </h2>
+                    <p class="theme-text-secondary text-xs sm:text-sm max-w-xl mx-auto font-medium">
+                        Have a graphic design project, brand identity, or custom 3D website in mind? Reach out via social channels or drop a message below!
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    
+                    <!-- Social Links Column -->
+                    <div class="lg:col-span-6 space-y-3">
+                        <h3 class="font-display text-xs uppercase tracking-wider theme-text-muted font-bold px-1">Direct Social Channels</h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Email Copy Card -->
+                            <button onclick="copyEmail()" class="sm:col-span-2 tilt-card glass-card rounded-2xl p-4 text-left flex items-center justify-between border border-cyan-500/35 group">
+                                <div class="flex items-center gap-3.5 min-w-0">
+                                    <div class="w-11 h-11 rounded-xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center theme-cyan shrink-0">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-xs theme-text-muted font-semibold">Official Email (Click to Copy)</div>
+                                        <div class="text-sm sm:text-base font-bold theme-text-primary group-hover:text-cyan-500 transition truncate">prebathsofficial@gmail.com</div>
+                                    </div>
+                                </div>
+                                <svg class="w-4 h-4 theme-cyan shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
+
+                            <!-- WhatsApp -->
+                            <a href="https://wa.me/+94757534153?text=Hello%20Prebath%20Senevirathne!%20I%20visited%20your%203D%20Portfolio." target="_blank" rel="noopener noreferrer" class="tilt-card glass-card rounded-2xl p-4 flex items-center gap-3.5 border border-emerald-500/35 group">
+                                <div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center theme-emerald shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold theme-text-primary">WhatsApp</div>
+                                    <div class="text-[11px] theme-text-muted font-medium">Instant Chat</div>
+                                </div>
+                            </a>
+
+                            <!-- GitHub -->
+                            <a href="https://github.com/search?q=Prebath+Senevirathne" target="_blank" rel="noopener noreferrer" class="tilt-card glass-card rounded-2xl p-4 flex items-center gap-3.5 border border-slate-500/35 group">
+                                <div class="w-11 h-11 rounded-xl bg-slate-500/15 border border-slate-500/40 flex items-center justify-center theme-text-primary shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold theme-text-primary">GitHub</div>
+                                    <div class="text-[11px] theme-text-muted font-medium">Code Repositories</div>
+                                </div>
+                            </a>
+
+                            <!-- Facebook -->
+                            <a href="https://www.facebook.com/PrebathSenevirathna" target="_blank" rel="noopener noreferrer" class="tilt-card glass-card rounded-2xl p-4 flex items-center gap-3.5 border border-blue-500/35 group">
+                                <div class="w-11 h-11 rounded-xl bg-blue-500/15 border border-blue-500/40 flex items-center justify-center text-blue-500 shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold theme-text-primary">Facebook</div>
+                                    <div class="text-[11px] theme-text-muted font-medium">Connect Social</div>
+                                </div>
+                            </a>
+
+                            <!-- Instagram -->
+                            <a href="https://www.instagram.com/pr3bathsev/" target="_blank" rel="noopener noreferrer" class="tilt-card glass-card rounded-2xl p-4 flex items-center gap-3.5 border border-pink-500/35 group">
+                                <div class="w-11 h-11 rounded-xl bg-pink-500/15 border border-pink-500/40 flex items-center justify-center theme-pink shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold theme-text-primary">Instagram</div>
+                                    <div class="text-[11px] theme-text-muted font-medium">Visual Portfolio</div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="glass-card rounded-2xl p-4 flex items-center justify-between text-xs">
+                            <span class="theme-text-secondary font-medium">📍 Based in <strong class="theme-text-primary font-bold">Kandy, Sri Lanka</strong></span>
+                            <span class="theme-emerald font-bold">● Worldwide Remote</span>
+                        </div>
+                    </div>
+
+                    <!-- Direct Message Form -->
+                    <div class="lg:col-span-6 tilt-card glass-card rounded-3xl p-5 sm:p-6 border border-purple-500/35">
+                        <div class="space-y-4">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <h3 class="font-display text-lg sm:text-xl font-bold theme-text-primary flex items-center gap-2">
+                                    <span>Send a Direct Message</span>
+                                </h3>
+                                <button type="button" onclick="polishMessageWithAI()" id="ai-polish-btn" class="px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-xs font-bold theme-purple flex items-center gap-1.5 transition">
+                                    <span>✨ Polish with AI</span>
+                                </button>
+                            </div>
+
+                            <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-3.5">
+                                <div>
+                                    <label class="block text-xs font-bold theme-text-secondary mb-1">Your Name</label>
+                                    <input type="text" id="sender-name" required placeholder="John Doe" class="theme-input w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-cyan-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold theme-text-secondary mb-1">Your Email</label>
+                                    <input type="email" id="sender-email" required placeholder="you@example.com" class="theme-input w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-cyan-500 transition">
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label class="block text-xs font-bold theme-text-secondary">Project Type / Message</label>
+                                        <span class="text-[11px] theme-cyan font-semibold">Tip: Click ✨ Polish with AI</span>
+                                    </div>
+                                    <textarea id="sender-message" rows="3" required placeholder="Hi Prebath, I need a graphic design / website project..." class="theme-input w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-cyan-500 transition resize-none"></textarea>
+                                </div>
+                                <button type="submit" class="w-full neon-btn py-3.5 rounded-xl flex items-center justify-center gap-2 text-sm">
+                                    <span>Launch Message to Prebath</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="ai-studio-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="bg-slate-900 text-slate-100 w-full max-w-3xl rounded-3xl border border-cyan-400/40 shadow-2xl overflow-hidden flex flex-col max-h-[90dvh]">
+            
+            <!-- Modal Header -->
+            <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-slate-950/60">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500 flex items-center justify-center text-slate-950 font-bold text-lg shrink-0">
+                        ✨
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-white text-base sm:text-lg leading-tight">Prebath's Gemini AI Creative Studio</h3>
+                    </div>
+                </div>
+                <button onclick="closeAIModal()" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Modal Tabs -->
+            <div class="px-5 pt-3 pb-2 bg-slate-950/40 border-b border-white/10 flex flex-wrap gap-2">
+                <button onclick="switchAITab('architect')" id="ai-tab-architect" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 transition">
+                    <span>📐 AI Brand & Web Brief Architect</span>
+                </button>
+                <button onclick="switchAITab('chat')" id="ai-tab-chat" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/5 border border-transparent transition">
+                    <span>🤖 Ask Prebath's AI Twin</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-5 overflow-y-auto space-y-4 flex-1">
+                
+                <!-- Architect Panel -->
+                <div id="ai-panel-architect" class="space-y-4">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+                        <p class="text-xs sm:text-sm text-slate-300">
+                            Describe your business, brand, or website idea below. Gemini will generate a tailored <strong class="text-cyan-300">Creative Concept, Color Palette, & Deliverable Roadmap</strong> that Prebath can build for you!
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs text-slate-400 mb-1">Your Brand / Project Idea</label>
+                                <input id="ai-project-input" type="text" placeholder="e.g., A luxury Ceylon cinnamon brand needing a logo & 3D website" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Service Focus</label>
+                                <select id="ai-project-type" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400">
+                                    <option value="Full Brand Identity + 3D Website">Brand + 3D Website</option>
+                                    <option value="Graphic Design & Logo Identity">Graphic & Logo Design</option>
+                                    <option value="Custom 3D Interactive Website">3D Web Design & Dev</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                            <div class="flex flex-wrap gap-1.5">
+                                <button type="button" onclick="fillSamplePrompt('A futuristic gaming cafe in Kandy needing a neon logo and booking website')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10">🎮 Gaming Cafe</button>
+                                <button type="button" onclick="fillSamplePrompt('An organic Sri Lankan spice export brand needing luxury packaging & web store')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10">🌿 Ceylon Brand</button>
+                                <button type="button" onclick="fillSamplePrompt('A modern tech startup SaaS landing page with 3D animations and UI/UX')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10">🚀 Tech Startup</button>
+                            </div>
+
+                            <button onclick="generateProjectBlueprint()" id="ai-generate-btn" class="neon-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-1.5">
+                                <span>✨ Generate Creative Brief</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="ai-architect-loading" class="hidden py-8 text-center space-y-2">
+                        <div class="inline-block w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-xs sm:text-sm text-cyan-300 font-medium">Gemini AI is crafting your custom visual direction & web roadmap...</p>
+                    </div>
+
+                    <div id="ai-architect-result" class="hidden space-y-4 bg-slate-950/90 border border-cyan-400/30 rounded-2xl p-4 sm:p-5 text-white">
+                        <div class="flex flex-wrap items-start justify-between gap-2 border-b border-white/10 pb-3">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-cyan-400 font-bold">AI Generated Concept</span>
+                                <h4 id="res-concept-title" class="font-display text-lg sm:text-xl font-bold text-white"></h4>
+                                <p id="res-tagline" class="text-xs text-purple-300 italic mt-0.5"></p>
+                            </div>
+                            <span id="res-timeline" class="text-xs font-mono px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"></span>
+                        </div>
+
+                        <p id="res-direction" class="text-xs sm:text-sm text-slate-300 leading-relaxed"></p>
+
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Recommended Color Palette</div>
+                            <div id="res-colors" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+                        </div>
+
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Recommended Deliverables by Prebath</div>
+                            <ul id="res-deliverables" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-200"></ul>
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                            <button onclick="applyBriefToContact()" class="neon-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm">
+                                Send This Brief to Prebath →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Twin Chat Panel -->
+                <div id="ai-panel-chat" class="hidden space-y-3">
+                    <div id="ai-chat-history" class="h-60 overflow-y-auto space-y-3 p-3.5 rounded-2xl bg-slate-950 border border-white/10 text-xs sm:text-sm text-white">
+                        <div class="flex items-start gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shrink-0 font-bold">
+                                PS
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none px-3.5 py-2.5 text-slate-200 max-w-[85%]">
+                                Ayubowan! 👋 I'm <strong>Prebath's AI Twin</strong>. Ask me anything about Prebath's graphic design services, 3D web development stack, or freelance availability
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="askAITwin('What services does Prebath offer as a freelancer?')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-cyan-300 border border-cyan-500/20">💼 Services offered?</button>
+                        <button onclick="askAITwin('What software and coding tools does Prebath use?')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-purple-300 border border-purple-500/20">🛠️ Design & coding stack?</button>
+                        <button onclick="askAITwin('Prebath ගැන සිංහලෙන් කෙටියෙන් කියන්න')" class="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-pink-300 border border-pink-500/20">🇱🇰 Prebath ගැන සිංහලෙන්</button>
+                    </div>
+
+                    <form onsubmit="handleAIChatSubmit(event)" class="flex gap-2">
+                        <input id="ai-chat-input" type="text" required placeholder="Ask about Prebath's skills, projects, or rates..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400">
+                        <button type="submit" id="ai-chat-send-btn" class="neon-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm">
+                            Ask
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* -----------------------------------------------------------
+           0. THEME MANAGEMENT (DARK / LIGHT MODE + SYSTEM PREFERENCE)
+        ----------------------------------------------------------- */
+        let currentTheme = 'dark';
+
+        function initSystemTheme() {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light', false);
+
+            // Listen for OS theme changes dynamically
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    setTheme(e.matches ? 'dark' : 'light', false);
+                });
+            }
+        }
+
+        function toggleTheme() {
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(nextTheme, true);
+        }
+
+        function setTheme(theme, notify = true) {
+            currentTheme = theme;
+            const rootHtml = document.documentElement;
+            const sunIcon = document.getElementById('icon-sun');
+            const moonIcon = document.getElementById('icon-moon');
+
+            if (theme === 'dark') {
+                rootHtml.classList.add('dark');
+                if (sunIcon) sunIcon.classList.remove('hidden');
+                if (moonIcon) moonIcon.classList.add('hidden');
+                if (scene && scene.fog) scene.fog.color.setHex(0x030712);
+                if (gridHelper) gridHelper.material.opacity = 0.15;
+            } else {
+                rootHtml.classList.remove('dark');
+                if (sunIcon) sunIcon.classList.add('hidden');
+                if (moonIcon) moonIcon.classList.remove('hidden');
+                if (scene && scene.fog) scene.fog.color.setHex(0xf1f5f9);
+                if (gridHelper) gridHelper.material.opacity = 0.24;
+            }
+
+            if (notify) showToast(`Switched to ${theme.toUpperCase()} Mode`);
+        }
+
+        /* -----------------------------------------------------------
+           1. STARTUP LOADER
+        ----------------------------------------------------------- */
+        function runLoader() {
+            const bar = document.getElementById('loader-bar');
+            const status = document.getElementById('loader-status');
+            const screen = document.getElementById('loader-screen');
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 28;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    if (status) status.textContent = "Welcome to Prebath's 3D Universe!";
+                    setTimeout(() => {
+                        if (screen) screen.classList.add('fade-out');
+                    }, 300);
+                }
+                if (bar) bar.style.width = progress + '%';
+            }, 140);
+        }
+
+        /* -----------------------------------------------------------
+           2. PAGE NAVIGATION & SMOOTH MOBILE/DESKTOP SCROLLING
+        ----------------------------------------------------------- */
+        let currentPage = 0;
+        const totalPages = 4;
+        let isTransitioning = false;
+
+        const cameraWaypoints = [
+            { pos: { x: 0, y: 0, z: 19 }, rot: { x: 0, y: 0, z: 0 } },
+            { pos: { x: -12, y: 5, z: 16 }, rot: { x: 0.08, y: -0.35, z: 0 } },
+            { pos: { x: 12, y: -5, z: 16 }, rot: { x: -0.08, y: 0.35, z: 0 } },
+            { pos: { x: 0, y: 11, z: 15 }, rot: { x: -0.3, y: 0, z: 0 } }
+        ];
+
+        function navigateTo(pageIndex) {
+            if (pageIndex < 0 || pageIndex >= totalPages || pageIndex === currentPage || isTransitioning) return;
+            isTransitioning = true;
+
+            const sections = document.querySelectorAll('.page-section');
+            const navBtns = document.querySelectorAll('.nav-btn');
+            const sideDots = document.querySelectorAll('.side-dot');
+
+            sections.forEach((sec, idx) => {
+                sec.classList.remove('active', 'prev');
+                if (idx === pageIndex) {
+                    sec.classList.add('active');
+                    sec.scrollTop = 0;
+                } else if (idx < pageIndex) {
+                    sec.classList.add('prev');
+                }
+            });
+
+            navBtns.forEach((btn, idx) => {
+                if (idx === pageIndex) {
+                    btn.className = "nav-btn flex-1 justify-center px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 bg-cyan-500/20 theme-cyan border border-cyan-500/40";
+                } else {
+                    btn.className = "nav-btn flex-1 justify-center px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 theme-text-secondary hover:bg-cyan-500/10 border border-transparent";
+                }
+            });
+
+            sideDots.forEach((dot, idx) => {
+                if (idx === pageIndex) {
+                    dot.className = "side-dot w-3 h-3 rounded-full bg-cyan-500 ring-4 ring-cyan-500/30 transition-all";
+                } else {
+                    dot.className = "side-dot w-3 h-3 rounded-full bg-slate-400/50 hover:bg-cyan-400 transition-all";
+                }
+            });
+
+            // Trigger skill bars on Page 3
+            const skillBars = document.querySelectorAll('.skill-bar-fill');
+            if (pageIndex === 2) {
+                setTimeout(() => {
+                    skillBars.forEach(bar => bar.style.width = bar.getAttribute('data-width'));
+                }, 250);
+            } else {
+                skillBars.forEach(bar => bar.style.width = '0%');
+            }
+
+            currentPage = pageIndex;
+            setTimeout(() => { isTransitioning = false; }, 650);
+        }
+
+        // Wheel navigation with scroll-boundary check
+        window.addEventListener('wheel', (e) => {
+            const modal = document.getElementById('ai-studio-modal');
+            if (modal && !modal.classList.contains('hidden')) return;
+            if (isTransitioning) return;
+
+            const activeSection = document.getElementById(`page-${currentPage}`);
+            if (!activeSection) return;
+
+            const isScrollable = activeSection.scrollHeight > activeSection.clientHeight + 8;
+            if (isScrollable) {
+                const atTop = activeSection.scrollTop <= 6;
+                const atBottom = activeSection.scrollTop + activeSection.clientHeight >= activeSection.scrollHeight - 6;
+                if (e.deltaY > 0 && !atBottom) return;
+                if (e.deltaY < 0 && !atTop) return;
+            }
+
+            if (e.deltaY > 45 && currentPage < totalPages - 1) navigateTo(currentPage + 1);
+            else if (e.deltaY < -45 && currentPage > 0) navigateTo(currentPage - 1);
+        }, { passive: true });
+
+        // Keyboard navigation
+        window.addEventListener('keydown', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                if (currentPage < totalPages - 1) navigateTo(currentPage + 1);
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                if (currentPage > 0) navigateTo(currentPage - 1);
+            }
+        });
+
+        // Smart Touch Swipe for Android & iOS (Respects native vertical scrolling inside sections)
+        let touchStartY = 0;
+        let touchStartScrollTop = 0;
+        window.addEventListener('touchstart', (e) => {
+            const activeSection = document.getElementById(`page-${currentPage}`);
+            touchStartY = e.touches[0].clientY;
+            touchStartScrollTop = activeSection ? activeSection.scrollTop : 0;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            const modal = document.getElementById('ai-studio-modal');
+            if (modal && !modal.classList.contains('hidden')) return;
+            if (isTransitioning) return;
+
+            const activeSection = document.getElementById(`page-${currentPage}`);
+            if (!activeSection) return;
+
+            const diffY = touchStartY - e.changedTouches[0].clientY;
+            const isScrollable = activeSection.scrollHeight > activeSection.clientHeight + 10;
+
+            if (isScrollable) {
+                const atTop = touchStartScrollTop <= 8 && activeSection.scrollTop <= 8;
+                const atBottom = activeSection.scrollTop + activeSection.clientHeight >= activeSection.scrollHeight - 10;
+                if (diffY > 75 && atBottom && currentPage < totalPages - 1) navigateTo(currentPage + 1);
+                else if (diffY < -75 && atTop && currentPage > 0) navigateTo(currentPage - 1);
+            } else {
+                if (diffY > 65 && currentPage < totalPages - 1) navigateTo(currentPage + 1);
+                else if (diffY < -65 && currentPage > 0) navigateTo(currentPage - 1);
+            }
+        }, { passive: true });
+
+        /* -----------------------------------------------------------
+           3. TYPING EFFECT & DESKTOP TILT CARDS
+        ----------------------------------------------------------- */
+        const roles = ["Freelanc", "Graphic Design", "Web Design", "Brand Identity Creation", "Web App Develope"];
+        let roleIndex = 0, charIndex = 0, isDeleting = false;
+
+        function typeRoleLoop() {
+            const typedElement = document.getElementById('typed-role');
+            if (!typedElement) return;
+            const currentText = roles[roleIndex];
+
+            charIndex += isDeleting ? -1 : 1;
+            typedElement.textContent = currentText.substring(0, charIndex);
+
+            let speed = isDeleting ? 45 : 90;
+            if (!isDeleting && charIndex === currentText.length) {
+                speed = 1800;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                speed = 350;
+            }
+            setTimeout(typeRoleLoop, speed);
+        }
+
+        function initTiltCards() {
+            // Only enable 3D mouse-tilt on devices with a fine pointer (PC/Laptops)
+            if (window.matchMedia && !window.matchMedia('(pointer: fine)').matches) return;
+
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const rx = ((e.clientY - rect.top - rect.height / 2) / (rect.height / 2)) * -5;
+                    const ry = ((e.clientX - rect.left - rect.width / 2) / (rect.width / 2)) * 5;
+                    card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+                });
+            });
+        }
+
+        /* -----------------------------------------------------------
+           4. UTILITIES (TOAST, PHOTO UPLOAD, COPY EMAIL, FORM)
+        ----------------------------------------------------------- */
+        function showToast(message) {
+            const toast = document.getElementById('toast-box');
+            const text = document.getElementById('toast-text');
+            if (!toast || !text) return;
+            text.textContent = message;
+            toast.classList.remove('translate-x-96', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-x-96', 'opacity-0'), 3000);
+        }
+
+        function copyEmail() {
+            const temp = document.createElement("textarea");
+            temp.value = "prebathsofficial@gmail.com";
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand("copy");
+            document.body.removeChild(temp);
+            showToast("Email copied: prebathsofficial@gmail.com");
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('sender-name').value.trim();
+            const email = document.getElementById('sender-email').value.trim();
+            const msg = document.getElementById('sender-message').value.trim();
+            window.open(`mailto:prebathsofficial@gmail.com?subject=Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${msg}`)}`, '_blank');
+            showToast(`Thank you ${name}! Opening mail client...`);
+            document.getElementById('contact-form').reset();
+        }
+
+        /* -----------------------------------------------------------
+           5. GEMINI AI STUDIO INTEGRATION
+        ----------------------------------------------------------- */
+        const apiKey = "AQ.Ab8RN6LQ0DAOv77aLTv_-1sWije5hjS9aMPVMJ57PRx64opuqQ";
+        const GEMINI_MODEL = "gemini-3-flash-preview";
+        let lastGeneratedBrief = null;
+
+        async function callGeminiAPI(payload) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+            const delays = [1000, 2000, 4000];
+            for (let attempt = 0; attempt <= delays.length; attempt++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return await response.json();
+                } catch (err) {
+                    if (attempt === delays.length) throw err;
+                    await new Promise(res => setTimeout(res, delays[attempt]));
+                }
+            }
+        }
+
+        function openAIModal(tab = 'architect') {
+            const modal = document.getElementById('ai-studio-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            switchAITab(tab);
+        }
+
+        function closeAIModal() {
+            const modal = document.getElementById('ai-studio-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function switchAITab(tab) {
+            const archPanel = document.getElementById('ai-panel-architect');
+            const chatPanel = document.getElementById('ai-panel-chat');
+            const archBtn = document.getElementById('ai-tab-architect');
+            const chatBtn = document.getElementById('ai-tab-chat');
+
+            if (tab === 'architect') {
+                archPanel.classList.remove('hidden');
+                chatPanel.classList.add('hidden');
+                archBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 transition";
+                chatBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/5 border border-transparent transition";
+            } else {
+                archPanel.classList.add('hidden');
+                chatPanel.classList.remove('hidden');
+                chatBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 transition";
+                archBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/5 border border-transparent transition";
+            }
+        }
+
+        function fillSamplePrompt(text) {
+            document.getElementById('ai-project-input').value = text;
+        }
+
+        async function generateProjectBlueprint() {
+            const ideaInput = document.getElementById('ai-project-input').value.trim();
+            const serviceType = document.getElementById('ai-project-type').value;
+            if (!ideaInput) {
+                showToast("Please describe your brand or project idea first!");
+                return;
+            }
+
+            const loadingEl = document.getElementById('ai-architect-loading');
+            const resultEl = document.getElementById('ai-architect-result');
+            const genBtn = document.getElementById('ai-generate-btn');
+
+            loadingEl.classList.remove('hidden');
+            resultEl.classList.add('hidden');
+            genBtn.disabled = true;
+
+            const payload = {
+                systemInstruction: {
+                    parts: [{ text: "You are the AI Creative Director for Prebath Senevirathne, a 23-year-old Freelance Graphic Designer & 3D Web Designer based in Kandy, Sri Lanka." }]
+                },
+                contents: [{
+                    parts: [{ text: `Client Idea: "${ideaInput}"\nService: "${serviceType}"\nCreate a bespoke brand & web design concept.` }]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            conceptTitle: { type: "STRING" },
+                            tagline: { type: "STRING" },
+                            visualDirection: { type: "STRING" },
+                            estimatedTimeline: { type: "STRING" },
+                            colorPalette: {
+                                type: "ARRAY",
+                                items: {
+                                    type: "OBJECT",
+                                    properties: { name: { type: "STRING" }, hex: { type: "STRING" } },
+                                    propertyOrdering: ["name", "hex"]
+                                }
+                            },
+                            deliverables: { type: "ARRAY", items: { type: "STRING" } }
+                        },
+                        propertyOrdering: ["conceptTitle", "tagline", "visualDirection", "estimatedTimeline", "colorPalette", "deliverables"]
+                    }
+                }
+            };
+
+            try {
+                const data = await callGeminiAPI(payload);
+                const rawJson = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                const parsed = JSON.parse(rawJson);
+                lastGeneratedBrief = { ideaInput, serviceType, ...parsed };
+
+                document.getElementById('res-concept-title').textContent = parsed.conceptTitle || "Custom Creative Concept";
+                document.getElementById('res-tagline').textContent = `"${parsed.tagline || ''}"`;
+                document.getElementById('res-timeline').textContent = `⏱️ ${parsed.estimatedTimeline || '1-2 Weeks'}`;
+                document.getElementById('res-direction').textContent = parsed.visualDirection || "";
+
+                const colorsContainer = document.getElementById('res-colors');
+                colorsContainer.innerHTML = "";
+                (parsed.colorPalette || []).slice(0, 4).forEach(c => {
+                    const swatch = document.createElement('div');
+                    swatch.className = "p-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2";
+                    swatch.innerHTML = `
+                        <span class="w-6 h-6 rounded-lg shrink-0 border border-white/20" style="background:${c.hex};"></span>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-white truncate">${c.name}</div>
+                            <div class="text-[10px] font-mono text-slate-400">${c.hex}</div>
+                        </div>
+                    `;
+                    colorsContainer.appendChild(swatch);
+                });
+
+                const delivContainer = document.getElementById('res-deliverables');
+                delivContainer.innerHTML = "";
+                (parsed.deliverables || []).forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = "flex items-center gap-2 bg-white/5 px-3 py-2 rounded-xl border border-white/5";
+                    li.innerHTML = `<span class="text-cyan-400 font-bold">✓</span><span>${item}</span>`;
+                    delivContainer.appendChild(li);
+                });
+
+                loadingEl.classList.add('hidden');
+                resultEl.classList.remove('hidden');
+            } catch (error) {
+                loadingEl.classList.add('hidden');
+                showToast("Could not reach Gemini AI right now. Please try again!");
+            } finally {
+                genBtn.disabled = false;
+            }
+        }
+
+        function applyBriefToContact() {
+            if (!lastGeneratedBrief) return;
+            const summary = `Project Concept: ${lastGeneratedBrief.conceptTitle} (${lastGeneratedBrief.serviceType})\nIdea: ${lastGeneratedBrief.ideaInput}\nVisual Direction: ${lastGeneratedBrief.visualDirection}\nDeliverables: ${(lastGeneratedBrief.deliverables || []).join(', ')}`;
+            document.getElementById('sender-message').value = summary;
+            closeAIModal();
+            navigateTo(3);
+            showToast("✨ AI Brief loaded into Contact Form!");
+        }
+
+        async function askAITwin(questionText) {
+            const inputEl = document.getElementById('ai-chat-input');
+            const historyEl = document.getElementById('ai-chat-history');
+            const sendBtn = document.getElementById('ai-chat-send-btn');
+
+            const userQ = questionText || inputEl.value.trim();
+            if (!userQ) return;
+            inputEl.value = "";
+
+            const userBubble = document.createElement('div');
+            userBubble.className = "flex items-start justify-end gap-2";
+            userBubble.innerHTML = `<div class="bg-cyan-500/20 border border-cyan-400/40 rounded-2xl rounded-tr-none px-3.5 py-2 text-cyan-100 max-w-[80%]">${userQ.replace(/</g, "&lt;")}</div>`;
+            historyEl.appendChild(userBubble);
+
+            const botBubble = document.createElement('div');
+            botBubble.className = "flex items-start gap-2.5";
+            botBubble.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 shrink-0 font-bold">✨</div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none px-3.5 py-2.5 text-slate-200 max-w-[85%]">Thinking...</div>
+            `;
+            historyEl.appendChild(botBubble);
+            historyEl.scrollTop = historyEl.scrollHeight;
+            sendBtn.disabled = true;
+
+            const payload = {
+                systemInstruction: {
+                    parts: [{ text: "You are the friendly AI Twin of Prebath Senevirathne (23, Kandy, Sri Lanka, email: prebathsofficial@gmail.com). Freelance Graphic & 3D Web Designer. Reply concisely in English or Sinhala." }]
+                },
+                contents: [{ parts: [{ text: userQ }] }]
+            };
+
+            try {
+                const data = await callGeminiAPI(payload);
+                const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Reach out to Prebath at prebathsofficial@gmail.com!";
+                botBubble.querySelector('div:last-child').textContent = reply;
+            } catch (err) {
+                botBubble.querySelector('div:last-child').textContent = "Please email Prebath directly at prebathsofficial@gmail.com!";
+            } finally {
+                sendBtn.disabled = false;
+                historyEl.scrollTop = historyEl.scrollHeight;
+            }
+        }
+
+        function handleAIChatSubmit(e) {
+            e.preventDefault();
+            askAITwin();
+        }
+
+        async function polishMessageWithAI() {
+            const msgInput = document.getElementById('sender-message');
+            const nameInput = document.getElementById('sender-name').value.trim() || "a client";
+            const rawText = msgInput.value.trim();
+            const btn = document.getElementById('ai-polish-btn');
+
+            if (!rawText) {
+                showToast("Write a few keywords in the message box first!");
+                return;
+            }
+
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span>✨ Polishing...</span>`;
+
+            const payload = {
+                systemInstruction: {
+                    parts: [{ text: "Rewrite rough notes into a concise 3-sentence professional project inquiry for Prebath Senevirathne. Return ONLY the polished message." }]
+                },
+                contents: [{ parts: [{ text: `Client Name: ${nameInput}\nDraft: "${rawText}"` }] }]
+            };
+
+            try {
+                const data = await callGeminiAPI(payload);
+                const polished = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (polished) {
+                    msgInput.value = polished.trim();
+                    showToast("✨ Message polished with Gemini AI!");
+                }
+            } catch (err) {
+                showToast("Could not polish right now.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        /* -----------------------------------------------------------
+           6. THREE.JS 3D UNIVERSE (OPTIMIZED FOR ANDROID, iOS & PC)
+        ----------------------------------------------------------- */
+        let scene, camera, renderer;
+        let mainGroup, heroMesh, aboutMesh, skillsMesh, contactMesh, particleSystem, gridHelper;
+        let mouseX = 0, mouseY = 0;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('bg-canvas');
+            scene = new THREE.Scene();
+            const isDark = document.documentElement.classList.contains('dark');
+            scene.fog = new THREE.FogExp2(isDark ? 0x030712 : 0xf1f5f9, 0.022);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 19);
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+            const p1 = new THREE.PointLight(0x00f2fe, 3, 65); p1.position.set(15, 15, 15); scene.add(p1);
+            const p2 = new THREE.PointLight(0x8b5cf6, 3, 65); p2.position.set(-15, -15, 12); scene.add(p2);
+
+            gridHelper = new THREE.GridHelper(110, 40, 0x00f2fe, 0x8b5cf6);
+            gridHelper.position.y = -12;
+            gridHelper.material.transparent = true;
+            gridHelper.material.opacity = isDark ? 0.15 : 0.24;
+            scene.add(gridHelper);
+
+            mainGroup = new THREE.Group();
+            scene.add(mainGroup);
+
+            const isMobile = window.innerWidth < 768;
+            heroMesh = new THREE.Mesh(
+                new THREE.TorusKnotGeometry(3.0, 0.8, isMobile ? 64 : 100, 14),
+                new THREE.MeshStandardMaterial({ color: 0x00f2fe, wireframe: true })
+            );
+            heroMesh.position.set(4, 0, -2);
+            mainGroup.add(heroMesh);
+
+            aboutMesh = new THREE.Mesh(
+                new THREE.IcosahedronGeometry(3.4, 1),
+                new THREE.MeshStandardMaterial({ color: 0x8b5cf6, wireframe: true })
+            );
+            aboutMesh.position.set(-15, 5, -3);
+            mainGroup.add(aboutMesh);
+
+            skillsMesh = new THREE.Mesh(
+                new THREE.OctahedronGeometry(3.5, 2),
+                new THREE.MeshStandardMaterial({ color: 0xec4899, wireframe: true })
+            );
+            skillsMesh.position.set(15, -5, -3);
+            mainGroup.add(skillsMesh);
+
+            contactMesh = new THREE.Mesh(
+                new THREE.TorusGeometry(3.8, 1.0, 16, 60),
+                new THREE.MeshStandardMaterial({ color: 0x00f2fe, wireframe: true })
+            );
+            contactMesh.position.set(0, 14, -4);
+            mainGroup.add(contactMesh);
+
+            const pCount = isMobile ? 600 : 1200;
+            const pos = new Float32Array(pCount * 3);
+            const col = new Float32Array(pCount * 3);
+            for (let i = 0; i < pCount * 3; i += 3) {
+                pos[i] = (Math.random() - 0.5) * 95;
+                pos[i+1] = (Math.random() - 0.5) * 95;
+                pos[i+2] = (Math.random() - 0.5) * 95;
+                col[i] = 0.1 + Math.random() * 0.8;
+                col[i+1] = 0.3 + Math.random() * 0.7;
+                col[i+2] = 1.0;
+            }
+            const pGeo = new THREE.BufferGeometry();
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            pGeo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+            particleSystem = new THREE.Points(pGeo, new THREE.PointsMaterial({ size: 0.16, vertexColors: true, transparent: true, opacity: 0.8 }));
+            scene.add(particleSystem);
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+            if (heroMesh) { heroMesh.rotation.x += 0.0035; heroMesh.rotation.y += 0.005; }
+            if (aboutMesh) { aboutMesh.rotation.y -= 0.0045; aboutMesh.rotation.z += 0.003; }
+            if (skillsMesh) { skillsMesh.rotation.x += 0.0045; skillsMesh.rotation.y -= 0.004; }
+            if (contactMesh) { contactMesh.rotation.x -= 0.005; contactMesh.rotation.z += 0.0035; }
+            if (particleSystem) { particleSystem.rotation.y += 0.0006; }
+
+            const target = cameraWaypoints[currentPage];
+            camera.position.x += (target.pos.x + mouseX * 1.2 - camera.position.x) * 0.05;
+            camera.position.y += (target.pos.y - mouseY * 1.2 - camera.position.y) * 0.05;
+            camera.position.z += (target.pos.z - camera.position.z) * 0.05;
+
+            camera.rotation.x += (target.rot.x - mouseY * 0.04 - camera.rotation.x) * 0.05;
+            camera.rotation.y += (target.rot.y - mouseX * 0.04 - camera.rotation.y) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            initSystemTheme();
+            runLoader();
+            initThreeJS();
+            animateThreeJS();
+            typeRoleLoop();
+            initTiltCards();
+        };
+    </script>
+</body>
+</html>
